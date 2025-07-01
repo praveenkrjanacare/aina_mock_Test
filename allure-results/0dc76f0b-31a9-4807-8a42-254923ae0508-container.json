@@ -1,0 +1,1 @@
+{"uuid":"0dc76f0b-31a9-4807-8a42-254923ae0508","name":"Default suite","children":["f16f939d-1c68-4850-a3c8-21c20f16e118"],"befores":[{"name":"startEmulator","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1751368128043,"stop":1751368128076}],"afters":[],"start":1751368128021,"stop":1751368159056}

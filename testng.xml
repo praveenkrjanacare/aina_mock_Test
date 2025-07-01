@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<listeners>
+			<listener
+				class-name="com.aina.test.extent.report.GenerateExtentReport" />
+		</listeners>
+
+	<test thread-count="5" name="Test">
+		
+		<classes>
+			
+			<class name="com.aina.mobile.android.test.gettingstartedpage.GettingStartedTest" />
+			<class name="com.aina.mobile.android.test.permissions.PermissionTest" />
+			<class name="com.aina.mobile.android.test.alerts.AlertsTest" />
+			<class name="com.aina.mobile.android.test.placetube.PlaceTubeTest" />
+			<class name="com.aina.mobile.android.test.insertstrip.InsertStripTest" />
+			<class name="com.aina.mobile.android.test.collectapplysample.CollectAndApplySampleTest" />
+			<class name="com.aina.mobile.android.test.analyzing.AnalyzingTest"/>
+
+		</classes>
+	</test> <!--
+	Test -->
+</suite> <!--
+Suite -->
