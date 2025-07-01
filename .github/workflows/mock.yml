@@ -24,15 +24,17 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
 
-      - name: Start Android Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: google_apis
-          arch: x86_64
-          force-avd-creation: true
-          emulator-options: "-no-window -no-audio"
-          disable-animations: true
+      - - name: Start Android Emulator
+  uses: reactivecircus/android-emulator-runner@v2
+  with:
+    api-level: 35
+    target: google_apis
+    arch: x86_64
+    profile: Pixel_8
+    force-avd-creation: true
+    emulator-options: "-no-window -no-audio"
+    disable-animations: true
+
 
       - name: Run Appium Tests
         run: mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
