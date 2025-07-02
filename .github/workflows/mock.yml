@@ -38,6 +38,24 @@ jobs:
       - name: Add ADB to PATH
         run: echo "${ANDROID_SDK_ROOT}/platform-tools" >> $GITHUB_PATH
 
+      - name: Wait for Emulator to Fully Boot
+        run: |
+          echo "Waiting for emulator to stabilize..."
+          adb wait-for-device
+          boot_completed=""
+          timeout=120
+          elapsed=0
+          until [[ "$boot_completed" == "1" || $elapsed -ge $timeout ]]; do
+            boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+            sleep 2
+            elapsed=$((elapsed + 2))
+          done
+          if [[ "$boot_completed" != "1" ]]; then
+            echo "Emulator failed to boot in $timeout seconds"
+            exit 1
+          fi
+          echo "Emulator booted."
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -49,6 +67,14 @@ jobs:
           appium driver install uiautomator2
           appium --base-path /wd/hub > appium.log 2>&1 &
           sleep 5
+
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
 
       - name: Run Appium Tests
         run: mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
