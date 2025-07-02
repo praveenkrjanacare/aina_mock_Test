@@ -24,7 +24,7 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
 
-      - name: Start Android Emulator (default: Pixel_8_API_30)
+      - name: Start Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
