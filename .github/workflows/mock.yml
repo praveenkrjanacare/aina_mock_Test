@@ -29,4 +29,8 @@ jobs:
         profile: pixel
         avd-name: emulator-5554
         disable-animations: true
-        script: echo "Emulator emulator-5554 launched and shut down automatically"
+        script: |
+          echo "Emulator emulator-5554 launched"
+          echo "Waiting 10 seconds after boot..."
+          sleep 10
+          echo "Done. Exiting job – emulator will shut down automatically."
