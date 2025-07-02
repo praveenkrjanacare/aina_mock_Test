@@ -30,7 +30,14 @@ jobs:
         avd-name: emulator-5554
         disable-animations: true
         script: |
-          echo "Emulator emulator-5554 launched"
-          echo "Waiting 10 seconds after boot..."
+          echo "Waiting for emulator boot completion..."
+          boot_completed=""
+          until [[ "$boot_completed" == "1" ]]; do
+            sleep 5
+            boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+            echo "boot_completed=$boot_completed"
+          done
+          echo " Emulator booted."
+          echo " Waiting 10 more seconds before stopping..."
           sleep 10
-          echo "Done. Exiting job – emulator will shut down automatically."
+          echo " Done. Emulator will shut down automatically."
