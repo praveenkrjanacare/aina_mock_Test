@@ -1,7 +1,7 @@
-name: Launch Android Emulator Only
+name: Launch Emulator Only
 
 on:
-  workflow_dispatch:  # manually trigger via GitHub UI
+  workflow_dispatch:
 
 jobs:
   launch-emulator:
@@ -27,6 +27,6 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: pixel
-        avd-name: pixel
+        avd-name: emulator-5554
         disable-animations: true
-        script: echo "Emulator launched successfully!"
+        script: echo "Emulator emulator-5554 launched and shut down automatically"
