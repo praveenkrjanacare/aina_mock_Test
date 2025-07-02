@@ -1,7 +1,6 @@
 name: Launch Android Emulator on Ubuntu
 
-on:
-  workflow_dispatch:
+on: push
 
 jobs:
   emulator:
@@ -23,10 +22,10 @@ jobs:
           yes | sdkmanager --licenses
           sdkmanager --install "platforms;android-30" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
           echo "Creating AVD..."
-          echo no | avdmanager create avd -n pixel_3 -k "system-images;android-30;google_apis;x86_64" --device "pixel" --force
+          echo no | avdmanager create avd -n test-emulator -k "system-images;android-30;google_apis;x86_64" --force
 
           echo "Starting emulator..."
-          $ANDROID_HOME/emulator/emulator -avd pixel_3 -no-window -no-audio -no-boot-anim &
+          $ANDROID_HOME/emulator/emulator -avd test-emulator -no-window -no-audio -no-boot-anim &
           echo "Waiting for emulator to boot..."
           adb wait-for-device
 
@@ -36,6 +35,6 @@ jobs:
             sleep 2
           done
 
-          echo "Emulator is ready."
-          echo "AVDs available:"
+          echo "✅ Emulator is ready."
+          echo "📱 AVDs available:"
           avdmanager list avd
