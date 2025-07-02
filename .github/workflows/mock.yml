@@ -1,40 +1,41 @@
-name: Launch Android Emulator
+name: Launch Android Emulator on Ubuntu
 
 on:
   workflow_dispatch:
 
 jobs:
-  launch-emulator:
+  emulator:
+    name: Start Android Emulator (Ubuntu)
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '11'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
+      - name: Install and Start Emulator
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager --install "platforms;android-30" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          echo "Creating AVD..."
+          echo no | avdmanager create avd -n pixel_3 -k "system-images;android-30;google_apis;x86_64" --device "pixel" --force
 
-    - name: Install emulator
-      run: |
-        echo "y" | sdkmanager "platform-tools" "platforms;android-30" "emulator" "system-images;android-30;google_apis;x86_64"
-        echo "y" | sdkmanager --licenses
+          echo "Starting emulator..."
+          $ANDROID_HOME/emulator/emulator -avd pixel_3 -no-window -no-audio -no-boot-anim &
+          echo "Waiting for emulator to boot..."
+          adb wait-for-device
 
-    - name: Create AVD
-      run: |
-        echo "no" | avdmanager create avd -n testEmulator -k "system-images;android-30;google_apis;x86_64" --device "pixel"
+          boot_completed=""
+          until [[ "$boot_completed" == "1" ]]; do
+            boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+            sleep 2
+          done
 
-    - name: Start Emulator
-      run: |
-        nohup emulator -avd testEmulator -no-window -no-audio -no-snapshot &
-        adb wait-for-device
-
-    - name: Wait for Boot
-      run: |
-        timeout 360s bash -c "until adb shell getprop sys.boot_completed | grep -m 1 '1'; do sleep 5; done"
-        adb shell input keyevent 82
+          echo "Emulator is ready."
+          echo "AVDs available:"
+          avdmanager list avd
