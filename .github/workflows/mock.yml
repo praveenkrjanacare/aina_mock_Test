@@ -1,4 +1,4 @@
-name: Launch Emulator Only
+name: TEST EMULATOR 
 
 on:
   workflow_dispatch:
@@ -30,13 +30,15 @@ jobs:
         avd-name: emulator-5554
         disable-animations: true
         script: |
-          echo "Waiting for emulator to fully boot..."
-          while [[ $(adb shell getprop sys.boot_completed | tr -d '\r') != "1" ]]; do
-            echo "Still booting..."
-            sleep 5
-          done
-          echo "Emulator booted successfully."
+          echo "Waiting for emulator to be ready..."
+            adb wait-for-device
+            boot_status=""
+            until [[ "$boot_status" == "1" ]]; do
+              boot_status=$(adb shell getprop sys.boot_completed | tr -d '\r')
+              echo "Boot status: $boot_status"
+              sleep 5
+            done
 
-          echo "Sleeping 10 seconds before exiting..."
-          sleep 10
-          echo " Done. Emulator will shut down automatically."
+            echo " Emulator booted. Waiting 10 seconds..."
+            sleep 10
+            echo " Done. Job complete — emulator will be stopped automatically."
