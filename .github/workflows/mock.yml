@@ -1,11 +1,11 @@
-name: Launch Android Emulator on Ubuntu
+name: Launch Android Emulator on macOS
 
 on: push
 
 jobs:
   emulator:
-    name: Start Android Emulator (Ubuntu)
-    runs-on: ubuntu-latest
+    name: Start Android Emulator (macOS)
+    runs-on: macos-latest
 
     steps:
       - name: Set up Java
@@ -21,20 +21,29 @@ jobs:
         run: |
           yes | sdkmanager --licenses
           sdkmanager --install "platforms;android-30" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+
           echo "Creating AVD..."
-          echo no | avdmanager create avd -n test-emulator -k "system-images;android-30;google_apis;x86_64" --force
+          echo no | avdmanager create avd -n pixel_3 -k "system-images;android-30;google_apis;x86_64" --device "pixel" --force
 
           echo "Starting emulator..."
-          $ANDROID_HOME/emulator/emulator -avd test-emulator -no-window -no-audio -no-boot-anim &
+          $ANDROID_HOME/emulator/emulator -avd pixel_3 -no-window -no-audio -no-boot-anim -gpu host &
           echo "Waiting for emulator to boot..."
           adb wait-for-device
 
           boot_completed=""
-          until [[ "$boot_completed" == "1" ]]; do
+          retries=0
+          max_retries=60
+          until [[ "$boot_completed" == "1" || $retries -ge $max_retries ]]; do
             boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
             sleep 2
+            ((retries++))
           done
 
-          echo "✅ Emulator is ready."
-          echo "📱 AVDs available:"
+          if [[ "$boot_completed" != "1" ]]; then
+            echo "Emulator boot timeout."
+            exit 1
+          fi
+
+          echo "Emulator is ready."
+          echo "AVDs available:"
           avdmanager list avd
