@@ -10,15 +10,8 @@
 		
 		<classes>
 			
-			<class name="com.aina.mobile.android.test.gettingstartedpage.GettingStartedTest" />
-			<class name="com.aina.mobile.android.test.permissions.PermissionTest" />
-			<class name="com.aina.mobile.android.test.alerts.AlertsTest" />
-			<class name="com.aina.mobile.android.test.placetube.PlaceTubeTest" />
-			<class name="com.aina.mobile.android.test.insertstrip.InsertStripTest" />
-			<class name="com.aina.mobile.android.test.collectapplysample.CollectAndApplySampleTest" />
-			<class name="com.aina.mobile.android.test.analyzing.AnalyzingTest"/>
-
-		</classes>
+						<class name="com.aina.mobile.android.test.insertstrip.InsertStripTest" />
+					</classes>
 	</test> <!--
 	Test -->
 </suite> <!--

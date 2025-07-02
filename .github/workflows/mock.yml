@@ -24,6 +24,22 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
 
+      - name: Start Android Emulator (default: Pixel_8_API_30)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          avd-name: Pixel_8_API_30  # Default emulator name
+          force-avd-creation: true
+          emulator-options: "-no-window -no-audio"
+          disable-animations: true
+
+      - name: Wait for Emulator to Fully Boot
+        run: |
+          echo "Waiting for emulator to stabilize..."
+          adb wait-for-device
+          sleep 60  # Wait for 60 seconds to ensure device is ready
 
       - name: Run Appium Tests
         run: mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
