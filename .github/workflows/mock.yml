@@ -41,8 +41,21 @@ jobs:
           adb wait-for-device
           sleep 60  # Wait for 60 seconds to ensure device is ready
 
-      - name: Run Appium Tests
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Appium and drivers
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+          appium --base-path /wd/hub > appium.log 2>&1 &
+          sleep 10
+
+      - name: Run Appium Tests using Maven
         run: mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
+
 
       - name: Upload Test Report
         if: always()
