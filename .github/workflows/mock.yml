@@ -30,9 +30,9 @@ jobs:
       - name: Accept licenses and install emulator tools
         run: |
           yes | sdkmanager --licenses
-          sdkmanager --install "platforms;android-30" "platform-tools" "system-images;android-30;google_apis;x86_64"
-          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --force
-          emulator -avd test -no-window -no-audio -no-boot-anim -no-snapshot-save &
+          sdkmanager --install "platforms;android-30" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
+          echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" --device "pixel" --force
+          ${ANDROID_SDK_ROOT}/emulator/emulator -avd test -no-window -no-audio -no-boot-anim -no-snapshot-save &
           sleep 5
 
       - name: Add ADB to PATH
