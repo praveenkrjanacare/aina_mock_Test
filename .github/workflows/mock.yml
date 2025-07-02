@@ -37,9 +37,8 @@ jobs:
 
       - name: Wait for Emulator to Fully Boot
         run: |
-          echo "Waiting for emulator to stabilize..."
-          adb wait-for-device
-          sleep 60  # Wait for 60 seconds to ensure device is ready
+            echo "Waiting for emulator to stabilize..."
+            sleep 60  # Wait for 60 seconds to ensure device is ready
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
