@@ -14,15 +14,17 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
       - name: Install and Start Emulator
+        env:
+          ANDROID_AVD_HOME: $HOME/.android/avd
         run: |
           yes | sdkmanager --licenses
           sdkmanager --install "platforms;android-30" "platform-tools" "emulator" "system-images;android-30;google_apis;x86_64"
-          avdmanager create avd -n pixel_3 -k "system-images;android-30;google_apis;x86_64" --device "pixel_3" --force
+          mkdir -p ~/.android/avd
+          avdmanager create avd -n pixel_3 -k "system-images;android-30;google_apis;x86_64" --device "pixel" --force
           ${ANDROID_SDK_ROOT}/emulator/emulator -avd pixel_3 -no-audio -no-window &
           adb wait-for-device
           boot_completed=""
