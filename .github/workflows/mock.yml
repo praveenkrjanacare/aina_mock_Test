@@ -30,16 +30,20 @@ jobs:
         avd-name: emulator-5554
         disable-animations: true
         script: |
-          echo "Waiting for emulator to boot completely..."
-          adb wait-for-device
-          boot_status=""
-          until [[ "$boot_status" == "1" ]]; do
+            echo "Waiting for emulator to boot..."
+            adb wait-for-device
+            boot_status=""
+             until [[ "$boot_status" == "1" ]]; do
             boot_status=$(adb shell getprop sys.boot_completed | tr -d '\r')
             echo "boot_completed = $boot_status"
             sleep 5
-          done
-          echo "Emulator is fully booted."
-          sleep 5
+             done
+
+            echo "Android booted. Now running safe settings commands..."
+             adb shell settings put global window_animation_scale 0.0
+             adb shell settings put global transition_animation_scale 0.0
+              adb shell settings put global animator_duration_scale 0.0
+              adb shell settings put system screen_off_timeout 2147483647
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
