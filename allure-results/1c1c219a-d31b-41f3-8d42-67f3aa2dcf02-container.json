@@ -1,1 +1,0 @@
-{"uuid":"1c1c219a-d31b-41f3-8d42-67f3aa2dcf02","name":"com.aina.mobile.android.test.alerts.AlertsTest","children":["3159d6a5-ebf4-452e-8bf8-aeb157b69ed2"],"befores":[{"name":"setup","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1750755543786,"stop":1750755543824}],"afters":[],"start":1750755527949,"stop":1750755548298}
