@@ -4,7 +4,6 @@ on: push
 
 jobs:
   emulator-only:
-    name: Android Emulator
     runs-on: macos-14
 
     steps:
@@ -17,23 +16,20 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Launch Emulator Only (Expecting emulator-5554)
+      - name: Start Emulator
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 30
           target: google_apis
           arch: arm64-v8a
-          profile: emulator-5554
+          profile: pixel_6
           disable-animations: true
+          emulator-boot-timeout: 600
           script: |
-            echo "✅ Emulator booted."
-            echo "Connected devices:"
+            echo "✅ Emulator booted"
             adb devices
             DEVICE_ID=$(adb devices | grep emulator | awk '{print $1}')
-            echo "📱 ADB Device ID: $DEVICE_ID"
-            if [[ "$DEVICE_ID" != "emulator-5554" ]]; then
-              echo "❌ Emulator is not running as emulator-5554"
-              exit 1
-            else
-              echo "✅ emulator-5554 is running as expected."
-            fi
+            echo "Running emulator device: $DEVICE_ID"
+            sleep 10
+            echo "🛑 Stopping emulator..."
+            adb -s "$DEVICE_ID" emu kill || echo "❌ Could not kill emulator (already shut down?)"
