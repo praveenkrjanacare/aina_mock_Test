@@ -23,7 +23,7 @@ jobs:
           api-level: 30
           target: google_apis
           arch: arm64-v8a
-          profile: pixel_6
+          profile: emulator-5554
           disable-animations: true
           script: |
             echo "✅ Emulator booted."
