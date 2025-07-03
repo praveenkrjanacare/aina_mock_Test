@@ -1,14 +1,13 @@
-name: Appium Android TestNG Workflow
+name: Appium Manual Android Emulator
 
-on:
-  workflow_dispatch:
+on: push
 
 jobs:
-  run-appium-tests:
+  appium-tests:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Set up Java 17
@@ -17,28 +16,7 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Boot Emulator and Wait for Full Boot
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 30
-        target: google_apis
-        arch: x86_64
-        profile: pixel
-        avd-name: emulator-5554
-        disable-animations: true
-        script: |
-          echo "Booting emulator safely..."
-          adb wait-for-device
-          until [[ "$(adb shell getprop sys.boot_completed | tr -d '\r')" == "1" ]]; do
-          echo "Waiting for boot..."
-          sleep 5
-           done
-          echo "Boot complete."
-
-    - name: Set up Node.js
+    - name: Set up Node.js for Appium
       uses: actions/setup-node@v4
       with:
         node-version: 18
@@ -48,12 +26,46 @@ jobs:
         npm install -g appium
         appium driver install uiautomator2
 
+    - name: Set up Android SDK and Emulator
+      run: |
+        yes | sdkmanager --licenses
+        sdkmanager --install "platform-tools" \
+                               "emulator" \
+                               "platforms;android-30" \
+                               "system-images;android-30;google_apis;x86_64"
+
+    - name: Create AVD
+      run: |
+        echo "no" | avdmanager create avd -n emulator-5554 -k "system-images;android-30;google_apis;x86_64" -d pixel
+
+    - name: Start Emulator
+      run: |
+        nohup $ANDROID_HOME/emulator/emulator -avd emulator-5554 -no-window -no-audio -gpu off > /dev/null 2>&1 &
+
+    - name: Wait for Emulator to Boot
+      run: |
+        echo "Waiting for emulator to boot..."
+        adb wait-for-device
+        boot_completed=""
+        until [[ "$boot_completed" == "1" ]]; do
+          boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+          echo "  ➤ boot_completed = $boot_completed"
+          sleep 5
+        done
+        echo "Emulator fully booted."
+
+        echo "Disabling animations for test stability..."
+        adb shell settings put global window_animation_scale 0.0 || true
+        adb shell settings put global transition_animation_scale 0.0 || true
+        adb shell settings put global animator_duration_scale 0.0 || true
+
     - name: Start Appium Server
       run: |
         nohup appium --address 0.0.0.0 --port 4723 > appium.log 2>&1 &
         sleep 5
-        echo "Appium server is running"
 
     - name: Run TestNG Tests
       run: mvn clean test -DsuiteXmlFile=testng.xml
-      
+
+    - name: Stop Emulator
+      run: adb -s emulator-5554 emu kill || true
