@@ -25,4 +25,4 @@ jobs:
           profile: pixel_6    # ✅ ARM-friendly device
           disable-animations: true
           script: ./gradlew connectedCheck
-          script: ./gradlew connectedCheck
+        
