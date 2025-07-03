@@ -16,20 +16,13 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Start Emulator
+      - name: Launch Emulator
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          target: google_apis
-          arch: arm64-v8a
-          profile: pixel_6
-          disable-animations: true
-          emulator-boot-timeout: 600
-          script: |
-            echo "✅ Emulator booted"
-            adb devices
-            DEVICE_ID=$(adb devices | grep emulator | awk '{print $1}')
-            echo "Running emulator device: $DEVICE_ID"
-            sleep 10
-            echo "🛑 Stopping emulator..."
-            adb -s "$DEVICE_ID" emu kill || echo "❌ Could not kill emulator (already shut down?)"
+         api-level: 30
+         target: google_apis
+         arch: arm64-v8a           # ✅ Use ARM image for macOS-14 runners
+         profile: pixel_6          # ✅ ARM64-compatible AVD profile
+         disable-animations: true
+         emulator-boot-timeout: 600
+         script: echo " Emulator booted"
