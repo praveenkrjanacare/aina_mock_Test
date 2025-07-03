@@ -1,12 +1,11 @@
-
-name: Android Emulator Test Run
+name: Android Instrumentation Tests
 
 on:
   workflow_dispatch:
 
 jobs:
   test:
-    runs-on: macos-latest  
+    runs-on: macos-latest  # Fastest for AVD boot
 
     steps:
     - name: Checkout Code
@@ -21,16 +20,25 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Launch Emulator and Run Instrumentation Tests
+    - name: Launch Pixel 3a Emulator & Run Tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 30
         target: google_apis
         arch: x86_64
-        profile: Nexus 6
+        profile: Pixel_3a
         disable-animations: true
+        emulator-options: "-no-snapshot-save -no-window -gpu swiftshader_indirect"
         script: |
           echo "Waiting for emulator to boot..."
           adb wait-for-device
-          echo "Running instrumentation tests..."
+
+          boot_completed=""
+          until [[ "$boot_completed" == "1" ]]; do
+            boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+            echo "Boot status: $boot_completed"
+            sleep 5
+          done
+
+          echo "Emulator is ready! Starting tests..."
           ./gradlew connectedDebugAndroidTest --stacktrace
