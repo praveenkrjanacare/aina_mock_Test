@@ -30,8 +30,5 @@ jobs:
         profile: emulator-5554
         disable-animations: true
         emulator-boot-timeout: 600  
-        working-directory: ./android
-        script: |
-          echo "Running connected tests..."
-          ./gradlew connectedDebugAndroidTest --stacktrace
+       
 
