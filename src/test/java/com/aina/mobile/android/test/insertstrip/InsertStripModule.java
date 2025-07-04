@@ -1,7 +1,12 @@
 package com.aina.mobile.android.test.insertstrip;
 
+import java.time.Duration;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import com.mobile.test.ui.util.Util;
@@ -86,16 +91,39 @@ public class InsertStripModule {
 	}
 	
 	public void connectMockDevice() {
-		letsGetStartedButtton.click();
-		creatinineTestSelectButton.click();
-		Util.sleep(2000);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-		nextButton.click();
-		Util.sleep(3000);
+		// 1. Wait and click "Let's get started" button
+		WebElement letsBtn = wait.until(
+		    ExpectedConditions.visibilityOfElementLocated(By.id("com.janacare.ainac.az:id/active_button"))
+		);
+		letsBtn.click();
 
-		nextButton.click();
-		Util.sleep(3000);
+		// 2. Wait and click the creatinine test selection
+		/*
+		 * WebElement creatinineBtn = wait.until(ExpectedConditions
+		 * .visibilityOfElementLocated(By.xpath(
+		 * "com.janacare.ainac.az:id/creatinineTestSelectButton")));
+		 * creatinineBtn.click();
+		 */
 
+		// Optional: replace fixed sleep with wait for next element
+		// Util.sleep(2000);
+
+		// 3. Wait and click "Next" button (first time)
+		WebElement nextBtn1 = wait.until(
+		    ExpectedConditions.elementToBeClickable(By.id("//*[@text='Creatinine']"))
+		);
+		nextBtn1.click();
+
+		// Util.sleep(3000);
+
+		// 4. Wait and click "Next" button (second time)
+		/*
+		 * WebElement nextBtn2 = wait.until(
+		 * ExpectedConditions.elementToBeClickable(By.id(
+		 * "com.janacare.ainac.az:id/nextButton")) ); nextBtn2.click();
+		 */
 	//	noButton.click();
 		//Util.sleep(2000);
 
