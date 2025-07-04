@@ -24,7 +24,7 @@ public class InsertStripTest extends AbstractPageObjectMobile {
 
 	@Test(description="connect the aina c mock device")
 	public void TC_001() {
-		//pageObjectsAdmin.insertStripModule.connectMockDevice();
+		pageObjectsAdmin.insertStripModule.connectMockDevice();
 	}
 	
 
