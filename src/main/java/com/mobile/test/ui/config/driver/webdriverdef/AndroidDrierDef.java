@@ -102,6 +102,10 @@ public class AndroidDrierDef extends AbstractWebDriver {
 				testDevicesDesiredCapabilites.get(ConstantParametersSetup.AUTOMATIONNAME));
 		des.setCapability(ConstantParametersSetup.APPIUM,
 				testDevicesDesiredCapabilites.get(ConstantParametersSetup.APPIUM));
+		
+		des.setCapability("appium:uiautomator2ServerInstallTimeout", 120000);
+		des.setCapability("appium:uiautomator2ServerLaunchTimeout", 120000);
+		des.setCapability("appium:adbExecTimeout", 120000); 
 		return des;
 	}
 }
