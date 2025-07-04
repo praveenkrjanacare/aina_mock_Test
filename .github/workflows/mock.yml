@@ -31,6 +31,6 @@ jobs:
       - name: Launch emulator and run Appium tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34                
+          api-level: 29                     
           emulator-options: -no-window    
           script: mvn clean test -Pandroid
