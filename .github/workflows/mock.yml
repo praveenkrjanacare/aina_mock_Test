@@ -32,4 +32,6 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          arch: x86_64                      
+          emulator-options: -no-window    
           script: mvn clean test -Pandroid
