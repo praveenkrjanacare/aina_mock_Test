@@ -6,7 +6,7 @@ on:
 
 jobs:
   integration_test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write
@@ -31,7 +31,6 @@ jobs:
       - name: Launch emulator and run Appium tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          arch: x86_64                      
+          api-level: 29                     
           emulator-options: -no-window    
           script: mvn clean test -Pandroid
