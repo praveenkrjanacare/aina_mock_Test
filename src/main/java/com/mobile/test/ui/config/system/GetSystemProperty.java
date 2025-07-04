@@ -98,7 +98,7 @@ public class GetSystemProperty {
 		String appiumServerURL = System.getProperty(SystemProperties.APPIUM_URL);
 		if (appiumServerURL == null) {
 			try {
-				return new URL("http://0.0.0.0:4723/wd/hub");
+				return new URL("http://localhost:4723/wd/hub");
 			} catch (MalformedURLException e) {
 				LOG.info("Appium Server URL is invalid");
 			}
